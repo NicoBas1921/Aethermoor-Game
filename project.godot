@@ -11,6 +11,7 @@ config_version=5
 [application]
 
 config/name="Aethermoor-Game"
+run/main_scene="uid://clp5lj820l07u"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
