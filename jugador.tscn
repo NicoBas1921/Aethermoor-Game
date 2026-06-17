@@ -1,17 +1,27 @@
 [gd_scene format=3 uid="uid://clp5lj820l07u"]
 
 [ext_resource type="Script" uid="uid://difgk8edp1pon" path="res://jugador.gd" id="1_omvyu"]
-[ext_resource type="Texture2D" uid="uid://df8bl57cxijni" path="res://icon.svg" id="2_8o684"]
+[ext_resource type="Texture2D" uid="uid://bqx6j5o0f4ckj" path="res://Assets/roguelikeChar_transparent.png" id="2_omvyu"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ukil5"]
-size = Vector2(128, 129)
+size = Vector2(18, 17)
 
 [node name="Jugador" type="CharacterBody2D" unique_id=1591267721]
 script = ExtResource("1_omvyu")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=315565828]
-texture = ExtResource("2_8o684")
+position = Vector2(1, 1)
+texture = ExtResource("2_omvyu")
+hframes = 54
+vframes = 12
+frame = 378
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2111320044]
-position = Vector2(0, 0.5)
+y_sort_enabled = true
+position = Vector2(1, 1)
 shape = SubResource("RectangleShape2D_ukil5")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1409872049]
+zoom = Vector2(3, 3)
+position_smoothing_enabled = true
+rotation_smoothing_enabled = true
