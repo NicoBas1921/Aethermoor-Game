@@ -10,13 +10,13 @@ size = Vector2(18, 17)
 script = ExtResource("1_omvyu")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=315565828]
-position = Vector2(1, 1)
 texture = ExtResource("2_omvyu")
 hframes = 54
 vframes = 12
-frame = 378
+frame = 324
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2111320044]
+visible = false
 y_sort_enabled = true
 position = Vector2(1, 1)
 shape = SubResource("RectangleShape2D_ukil5")
