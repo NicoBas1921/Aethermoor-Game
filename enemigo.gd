@@ -15,6 +15,7 @@ const RANGO_ATAQUE = 24.0      # ¡SUBIDO! Rango enorme para que muerda sí o s�
 var tiempo_ultimo_ataque = 0.0
 
 func _ready():
+	add_to_group("atacante")
 	if barra_vida:
 		barra_vida.max_value = salud
 		barra_vida.value = salud
@@ -29,7 +30,7 @@ func seleccionar_enemigo():
 	modulate = Color(1, 0.5, 0.5)
 	print("Enemigo seleccionado")
 	
-	var jugador = get_tree().current_scene.get_node("Jugador")
+	var jugador = _obtener_jugador()
 	if jugador:
 		jugador.objetivo_actual = self
 
@@ -57,7 +58,7 @@ func morir():
 func _physics_process(delta):
 	if esta_muerto: return
 	
-	var jugador = get_tree().current_scene.get_node("Jugador")
+	var jugador = _obtener_jugador()
 	if jugador:
 		if jugador.jugador_muerto:
 			velocity = Vector2.ZERO
@@ -85,3 +86,17 @@ func atacar_jugador(jugador_nodo):
 	print("¡El orco te mordió!")
 	if jugador_nodo.has_method("recibir_dano_jugador"):
 		jugador_nodo.recibir_dano_jugador(10)
+
+
+func _obtener_jugador():
+	var escena_actual = get_tree().current_scene
+	if escena_actual != null:
+		var jugador = escena_actual.get_node_or_null("Jugador")
+		if jugador != null:
+			return jugador
+
+	var padre = get_parent()
+	if padre != null:
+		return padre.get_node_or_null("Jugador")
+
+	return null

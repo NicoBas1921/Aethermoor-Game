@@ -7,6 +7,12 @@
 [ext_resource type="PackedScene" uid="uid://bsftfsskm4gc2" path="res://enemigo.tscn" id="4_maj3s"]
 [ext_resource type="PackedScene" path="res://HUD.tscn" id="5_hud"]
 [ext_resource type="PackedScene" path="res://TutorialInicio.tscn" id="6_tutorial"]
+[ext_resource type="PackedScene" path="res://AutoAbandonado.tscn" id="7_auto"]
+[ext_resource type="PackedScene" path="res://CasaBloqueada.tscn" id="8_casa"]
+[ext_resource type="Script" path="res://SpawnManager.gd" id="9_spawn"]
+[ext_resource type="PackedScene" path="res://Manzana.tscn" id="10_manzana"]
+[ext_resource type="PackedScene" path="res://Escudo.tscn" id="11_escudo"]
+[ext_resource type="Script" path="res://MundoManager.gd" id="12_mundo"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_l4c1v"]
 texture = ExtResource("1_34qej")
@@ -3934,9 +3940,19 @@ sources/0 = SubResource("TileSetAtlasSource_l4c1v")
 sources/2 = SubResource("TileSetScenesCollectionSource_rb8eu")
 sources/3 = SubResource("TileSetAtlasSource_nby8t")
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_limite_horizontal"]
+size = Vector2(1360, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_limite_vertical"]
+size = Vector2(32, 760)
+
 [node name="Mundo- Valecrest" type="Node2D" unique_id=1385150693]
 y_sort_enabled = true
 position = Vector2(-11, 4)
+script = ExtResource("12_mundo")
+auto_scene = ExtResource("7_auto")
+casa_scene = ExtResource("8_casa")
+enemigo_scene = ExtResource("4_maj3s")
 
 [node name="TileMap" type="TileMap" parent="." unique_id=1660883812]
 y_sort_enabled = true
@@ -3963,3 +3979,59 @@ position = Vector2(954, 625)
 [node name="HUD" parent="." unique_id=1212917746 instance=ExtResource("5_hud")]
 
 [node name="TutorialInicio" parent="." unique_id=714078854 instance=ExtResource("6_tutorial")]
+
+[node name="LimitesMapa" type="Node2D" parent="."]
+
+[node name="Arriba" type="StaticBody2D" parent="LimitesMapa"]
+position = Vector2(680, 16)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LimitesMapa/Arriba"]
+shape = SubResource("RectangleShape2D_limite_horizontal")
+
+[node name="Abajo" type="StaticBody2D" parent="LimitesMapa"]
+position = Vector2(680, 744)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LimitesMapa/Abajo"]
+shape = SubResource("RectangleShape2D_limite_horizontal")
+
+[node name="Izquierda" type="StaticBody2D" parent="LimitesMapa"]
+position = Vector2(16, 380)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LimitesMapa/Izquierda"]
+shape = SubResource("RectangleShape2D_limite_vertical")
+
+[node name="Derecha" type="StaticBody2D" parent="LimitesMapa"]
+position = Vector2(1344, 380)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LimitesMapa/Derecha"]
+shape = SubResource("RectangleShape2D_limite_vertical")
+
+[node name="Obstaculos" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="CasaBloqueada" parent="Obstaculos" instance=ExtResource("8_casa")]
+position = Vector2(520, 240)
+
+[node name="CasaBloqueada2" parent="Obstaculos" instance=ExtResource("8_casa")]
+position = Vector2(740, 590)
+
+[node name="CasaBloqueada3" parent="Obstaculos" instance=ExtResource("8_casa")]
+position = Vector2(1080, 220)
+
+[node name="AutoAbandonado" parent="Obstaculos" instance=ExtResource("7_auto")]
+position = Vector2(420, 340)
+
+[node name="AutoAbandonado2" parent="Obstaculos" instance=ExtResource("7_auto")]
+position = Vector2(850, 420)
+
+[node name="AutoAbandonado3" parent="Obstaculos" instance=ExtResource("7_auto")]
+position = Vector2(250, 520)
+
+[node name="AutoAbandonado4" parent="Obstaculos" instance=ExtResource("7_auto")]
+position = Vector2(1120, 620)
+
+[node name="SpawnManager" type="Node2D" parent="."]
+script = ExtResource("9_spawn")
+manzana_scene = ExtResource("10_manzana")
+escudo_scene = ExtResource("11_escudo")
+rect_spawn = Rect2(64, 64, 1200, 640)
