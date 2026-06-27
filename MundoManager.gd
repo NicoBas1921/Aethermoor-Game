@@ -7,6 +7,7 @@ const TILE_TIERRA := Vector2i(8, 10)
 const TILE_GRAVA := Vector2i(8, 16)
 const TILE_ARENA := Vector2i(8, 22)
 const TILE_PIEDRAS := Vector2i(9, 1)
+const TILE_CAMINO := Vector2i(8, 10)
 const TILE_AGUA_CENTRO := Vector2i(3, 1)
 const TILE_AGUA_ARRIBA := Vector2i(3, 0)
 const TILE_AGUA_ABAJO := Vector2i(3, 2)
@@ -21,17 +22,20 @@ const TILE_AGUA_ESQ_INF_DER := Vector2i(4, 2)
 @export var limites_path: NodePath = NodePath("LimitesMapa")
 @export var obstaculos_path: NodePath = NodePath("Obstaculos")
 @export var spawn_manager_path: NodePath = NodePath("SpawnManager")
+@export var objetivo_manager_path: NodePath = NodePath("ObjetivoManager")
 @export var jugador_path: NodePath = NodePath("Jugador")
 @export var auto_scene: PackedScene
 @export var casa_scene: PackedScene
 @export var enemigo_scene: PackedScene
+@export var generar_mapa_runtime := false
+@export var decorar_runtime := false
 @export var escala_mapa := Vector2i(2, 2)
 @export var margen_spawn := 64.0
-@export var autos_aleatorios := 16
-@export var casas_aleatorias := 10
-@export var parches_bioma := 28
-@export var parches_decoracion := 120
-@export var lagos_aleatorios := 4
+@export var autos_aleatorios := 0
+@export var casas_aleatorias := 0
+@export var parches_bioma := 42
+@export var parches_decoracion := 170
+@export var lagos_aleatorios := 5
 @export var max_atacantes := 8
 @export var intervalo_spawn_atacante := 7.0
 @export var margen_fuera_camara := 96.0
@@ -46,12 +50,17 @@ var celdas_decoracion := {}
 func _ready():
 	rng.randomize()
 	var tilemap: TileMap = get_node(tilemap_path)
-	_generar_mapa_continuo(tilemap)
+	if generar_mapa_runtime:
+		_generar_mapa_continuo(tilemap)
+	else:
+		celdas_mapa = tilemap.get_used_rect()
 	rect_jugable = _calcular_rect_jugable(tilemap, celdas_mapa)
 	_ajustar_limites(rect_jugable)
 	_configurar_camara(rect_jugable)
 	_configurar_spawn_manager(rect_jugable)
-	call_deferred("_decorar_mapa")
+	_configurar_objetivo_manager(rect_jugable)
+	if decorar_runtime:
+		call_deferred("_decorar_mapa")
 	call_deferred("_crear_timer_atacantes")
 
 
@@ -78,6 +87,7 @@ func _generar_mapa_continuo(tilemap: TileMap):
 			_aplicar_tile(tilemap, 0, Vector2i(x, y), suelo_base)
 
 	_generar_bioma_procedural(tilemap)
+	_generar_caminos_medievales(tilemap)
 	_generar_decoracion_tilemap(tilemap, decoraciones)
 
 
@@ -205,6 +215,77 @@ func _generar_bioma_procedural(tilemap: TileMap):
 
 	for i in range(lagos_aleatorios):
 		_generar_lago(tilemap)
+
+
+func _generar_caminos_medievales(tilemap: TileMap):
+	var margen = 8
+	var centro = Vector2i(
+		floori((celdas_mapa.position.x + celdas_mapa.end.x) * 0.5),
+		floori((celdas_mapa.position.y + celdas_mapa.end.y) * 0.5)
+	)
+	var puntos = [
+		Vector2i(celdas_mapa.position.x + margen, centro.y),
+		Vector2i(celdas_mapa.end.x - margen, centro.y + rng.randi_range(-4, 4)),
+		Vector2i(centro.x + rng.randi_range(-3, 3), celdas_mapa.position.y + margen),
+		Vector2i(centro.x + rng.randi_range(-3, 3), celdas_mapa.end.y - margen),
+	]
+
+	for punto in puntos:
+		_pintar_camino(tilemap, punto, centro)
+
+	_pintar_plaza(tilemap, centro, 5, 4)
+
+
+func _pintar_camino(tilemap: TileMap, desde: Vector2i, hasta: Vector2i):
+	var actual = desde
+	while actual.x != hasta.x:
+		_pintar_camino_celda(tilemap, actual)
+		actual.x += _paso_entero(hasta.x - actual.x)
+
+	while actual.y != hasta.y:
+		_pintar_camino_celda(tilemap, actual)
+		actual.y += _paso_entero(hasta.y - actual.y)
+
+	_pintar_camino_celda(tilemap, hasta)
+
+
+func _paso_entero(valor: int) -> int:
+	if valor > 0:
+		return 1
+	if valor < 0:
+		return -1
+	return 0
+
+
+func _pintar_camino_celda(tilemap: TileMap, celda: Vector2i):
+	var camino = _crear_tile(TILE_CAMINO)
+	var borde = _crear_tile(TILE_GRAVA)
+	for x in range(-1, 2):
+		for y in range(-1, 2):
+			var destino = celda + Vector2i(x, y)
+			if not _celda_en_mapa_con_margen(destino, 2):
+				continue
+
+			if abs(x) + abs(y) <= 1:
+				_aplicar_tile(tilemap, 0, destino, camino)
+			elif rng.randf() < 0.45:
+				_aplicar_tile(tilemap, 0, destino, borde)
+			celdas_bioma[destino] = true
+
+
+func _pintar_plaza(tilemap: TileMap, centro: Vector2i, radio_x: int, radio_y: int):
+	var grava = _crear_tile(TILE_GRAVA)
+	var piedra = _crear_tile(TILE_PIEDRAS)
+	for x in range(-radio_x, radio_x + 1):
+		for y in range(-radio_y, radio_y + 1):
+			var celda = centro + Vector2i(x, y)
+			if not _celda_en_mapa_con_margen(celda, 3):
+				continue
+
+			var distancia = pow(float(x) / float(radio_x), 2.0) + pow(float(y) / float(radio_y), 2.0)
+			if distancia <= 1.0:
+				_aplicar_tile(tilemap, 0, celda, piedra if rng.randf() < 0.22 else grava)
+				celdas_bioma[celda] = true
 
 
 func _pintar_mancha_suelo(tilemap: TileMap, tile: Dictionary, radio_x: int, radio_y: int):
@@ -467,7 +548,9 @@ func _ajustar_limites(rect: Rect2):
 
 func _configurar_limite(limite: StaticBody2D, posicion: Vector2, forma: RectangleShape2D):
 	limite.global_position = posicion
-	limite.get_node("CollisionShape2D").shape = forma
+	var colision: CollisionShape2D = limite.get_node("CollisionShape2D")
+	colision.position = Vector2.ZERO
+	colision.shape = forma
 
 
 func _configurar_camara(rect: Rect2):
@@ -496,6 +579,15 @@ func _configurar_spawn_manager(rect: Rect2):
 		return
 
 	spawn_manager.rect_spawn = rect.grow(-margen_spawn)
+
+
+func _configurar_objetivo_manager(rect: Rect2):
+	var objetivo_manager = get_node_or_null(objetivo_manager_path)
+	if objetivo_manager == null:
+		return
+
+	if objetivo_manager.has_method("configurar_area_spawn"):
+		objetivo_manager.configurar_area_spawn(rect.grow(-margen_spawn))
 
 
 func _decorar_mapa():

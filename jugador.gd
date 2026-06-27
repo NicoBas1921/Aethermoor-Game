@@ -97,6 +97,8 @@ func atacar_objetivo():
 
 	if distancia <= max(rango_ataque, TILE_SIZE * 1.5):
 		print("Golpeaste al enemigo con el caballero.")
+		if has_node("/root/Sfx"):
+			get_node("/root/Sfx").golpe()
 		animar_golpe_caballero()
 		objetivo_actual.recibir_dano(dano_ataque)
 	else:
@@ -105,6 +107,8 @@ func atacar_objetivo():
 
 func lanzar_proyectil_maga():
 	print("Lanzaste una bola de fuego celeste.")
+	if has_node("/root/Sfx"):
+		get_node("/root/Sfx").ataque_magico()
 	var proyectil = ESCENA_PROYECTIL_MAGA.instantiate()
 	get_tree().current_scene.add_child(proyectil)
 	proyectil.configurar(global_position, objetivo_actual, dano_ataque, rango_ataque_casillas * TILE_SIZE)
@@ -136,6 +140,8 @@ func recibir_dano_jugador(cantidad):
 
 	vida_cambiada.emit(salud_jugador)
 	print("TU SALUD: ", salud_jugador, " | ESCUDO: ", escudo_jugador)
+	if has_node("/root/Sfx"):
+		get_node("/root/Sfx").dano()
 
 	# Destello rojo de daño
 	modulate = Color(1, 0.3, 0.3)
@@ -184,6 +190,7 @@ func curar(cantidad):
 
 	salud_jugador = min(salud_jugador + cantidad, VIDA_MAXIMA)
 	vida_cambiada.emit(salud_jugador)
+	_destello(Color(0.35, 1.0, 0.45))
 	print("Manzana consumida. Salud: ", salud_jugador)
 
 
@@ -193,7 +200,15 @@ func recargar_escudo(cantidad):
 
 	escudo_jugador = min(escudo_jugador + cantidad, ESCUDO_MAXIMO)
 	escudo_cambiado.emit(escudo_jugador)
+	_destello(Color(0.35, 0.7, 1.0))
 	print("Escudo consumido. Escudo: ", escudo_jugador)
+
+
+func _destello(color: Color):
+	modulate = color
+	await get_tree().create_timer(0.15).timeout
+	if not jugador_muerto:
+		modulate = Color(1, 1, 1)
 
 
 func morir_jugador():

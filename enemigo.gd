@@ -40,6 +40,7 @@ func recibir_dano(cantidad):
 	salud -= cantidad 
 	if barra_vida:
 		barra_vida.value = salud
+	_destello_dano()
 	print("Salud actual del enemigo: ", salud)
 	
 	if salud <= 0:
@@ -53,6 +54,16 @@ func morir():
 		barra_vida.visible = false
 	colision.set_deferred("disabled", true)
 	print("Enemigo derrotado y ahora es transitable")
+
+
+func _destello_dano():
+	if esta_muerto:
+		return
+
+	modulate = Color(1, 0.35, 0.35)
+	await get_tree().create_timer(0.12).timeout
+	if not esta_muerto:
+		modulate = Color(1, 0.5, 0.5) if seleccionado else Color(1, 1, 1)
 
 # --- PROCESO FÍSICO ---
 func _physics_process(delta):
