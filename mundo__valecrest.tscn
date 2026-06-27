@@ -7,6 +7,14 @@
 [ext_resource type="PackedScene" uid="uid://bsftfsskm4gc2" path="res://enemigo.tscn" id="4_maj3s"]
 [ext_resource type="PackedScene" path="res://HUD.tscn" id="5_hud"]
 [ext_resource type="PackedScene" path="res://TutorialInicio.tscn" id="6_tutorial"]
+[ext_resource type="PackedScene" path="res://AutoAbandonado.tscn" id="7_auto"]
+[ext_resource type="PackedScene" path="res://CasaBloqueada.tscn" id="8_casa"]
+[ext_resource type="Script" uid="uid://lcxtaf6jkc05" path="res://SpawnManager.gd" id="9_spawn"]
+[ext_resource type="PackedScene" path="res://Manzana.tscn" id="10_manzana"]
+[ext_resource type="PackedScene" path="res://Escudo.tscn" id="11_escudo"]
+[ext_resource type="Script" uid="uid://cui7nrgjnjemt" path="res://MundoManager.gd" id="12_mundo"]
+[ext_resource type="Script" uid="uid://beeodawvm38pu" path="res://ObjetivoManager.gd" id="13_objetivo"]
+[ext_resource type="PackedScene" path="res://Cristal.tscn" id="14_cristal"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_l4c1v"]
 texture = ExtResource("1_34qej")
@@ -3934,9 +3942,19 @@ sources/0 = SubResource("TileSetAtlasSource_l4c1v")
 sources/2 = SubResource("TileSetScenesCollectionSource_rb8eu")
 sources/3 = SubResource("TileSetAtlasSource_nby8t")
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_limite_horizontal"]
+size = Vector2(1150, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_limite_vertical"]
+size = Vector2(32, 760)
+
 [node name="Mundo- Valecrest" type="Node2D" unique_id=1385150693]
 y_sort_enabled = true
 position = Vector2(-11, 4)
+script = ExtResource("12_mundo")
+auto_scene = ExtResource("7_auto")
+casa_scene = ExtResource("8_casa")
+enemigo_scene = ExtResource("4_maj3s")
 
 [node name="TileMap" type="TileMap" parent="." unique_id=1660883812]
 y_sort_enabled = true
@@ -3949,7 +3967,7 @@ layer_1/tile_data = PackedInt32Array(54, 983040, 10, 65590, 983040, 11, 262195, 
 
 [node name="Jugador" parent="." unique_id=1591267721 instance=ExtResource("2_l55at")]
 y_sort_enabled = true
-position = Vector2(267, 241)
+position = Vector2(556, 286)
 
 [node name="Enemigo" parent="." unique_id=1207888407 instance=ExtResource("4_maj3s")]
 position = Vector2(391, 622)
@@ -3963,3 +3981,68 @@ position = Vector2(954, 625)
 [node name="HUD" parent="." unique_id=1212917746 instance=ExtResource("5_hud")]
 
 [node name="TutorialInicio" parent="." unique_id=714078854 instance=ExtResource("6_tutorial")]
+
+[node name="LimitesMapa" type="Node2D" parent="." unique_id=1993941064]
+
+[node name="Arriba" type="StaticBody2D" parent="LimitesMapa" unique_id=14749242]
+position = Vector2(680, 16)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LimitesMapa/Arriba" unique_id=1980237990]
+shape = SubResource("RectangleShape2D_limite_horizontal")
+
+[node name="Abajo" type="StaticBody2D" parent="LimitesMapa" unique_id=873191623]
+position = Vector2(680, 744)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LimitesMapa/Abajo" unique_id=262288417]
+shape = SubResource("RectangleShape2D_limite_horizontal")
+
+[node name="Izquierda" type="StaticBody2D" parent="LimitesMapa" unique_id=598075292]
+position = Vector2(16, 380)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LimitesMapa/Izquierda" unique_id=1855907747]
+shape = SubResource("RectangleShape2D_limite_vertical")
+
+[node name="Derecha" type="StaticBody2D" parent="LimitesMapa" unique_id=390161275]
+position = Vector2(1344, 380)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LimitesMapa/Derecha" unique_id=27318559]
+shape = SubResource("RectangleShape2D_limite_vertical")
+
+[node name="Obstaculos" type="Node2D" parent="." unique_id=612614882]
+y_sort_enabled = true
+
+[node name="CasaBloqueada" parent="Obstaculos" unique_id=1988920215 instance=ExtResource("8_casa")]
+position = Vector2(569, 255)
+
+[node name="CasaBloqueada2" parent="Obstaculos" unique_id=1466382615 instance=ExtResource("8_casa")]
+position = Vector2(740, 590)
+
+[node name="CasaBloqueada3" parent="Obstaculos" unique_id=1752859545 instance=ExtResource("8_casa")]
+position = Vector2(1109, 193)
+
+[node name="SpawnManager" type="Node2D" parent="." unique_id=254592966]
+script = ExtResource("9_spawn")
+manzana_scene = ExtResource("10_manzana")
+escudo_scene = ExtResource("11_escudo")
+
+[node name="ObjetivoManager" type="Node2D" parent="." unique_id=2073234047]
+script = ExtResource("13_objetivo")
+cristal_scene = ExtResource("14_cristal")
+
+[node name="Cristal1" parent="ObjetivoManager" instance=ExtResource("14_cristal")]
+position = Vector2(348, 220)
+
+[node name="Cristal2" parent="ObjetivoManager" instance=ExtResource("14_cristal")]
+position = Vector2(672, 232)
+
+[node name="Cristal3" parent="ObjetivoManager" instance=ExtResource("14_cristal")]
+position = Vector2(1016, 272)
+
+[node name="Cristal4" parent="ObjetivoManager" instance=ExtResource("14_cristal")]
+position = Vector2(430, 548)
+
+[node name="Cristal5" parent="ObjetivoManager" instance=ExtResource("14_cristal")]
+position = Vector2(838, 510)
+
+[node name="Cristal6" parent="ObjetivoManager" instance=ExtResource("14_cristal")]
+position = Vector2(1190, 616)

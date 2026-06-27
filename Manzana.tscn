@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://Consumible.gd" id="1_consumible"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_manzana"]
+radius = 7.0
+
+[node name="Manzana" type="Area2D"]
+script = ExtResource("1_consumible")
+tipo = "vida"
+cantidad = 50
+
+[node name="Fruta" type="Polygon2D" parent="."]
+color = Color(0.843137, 0.0745098, 0.0745098, 1)
+polygon = PackedVector2Array(0, -8, 6, -5, 8, 2, 5, 8, -5, 8, -8, 2, -6, -5)
+
+[node name="Hoja" type="Polygon2D" parent="."]
+position = Vector2(3, -8)
+color = Color(0.172549, 0.584314, 0.192157, 1)
+polygon = PackedVector2Array(0, 0, 7, -3, 5, 2)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_manzana")
