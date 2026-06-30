@@ -1,11 +1,11 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://dgri10gfnq4iw"]
 
-[ext_resource type="Script" path="res://HUD.gd" id="1_hud"]
+[ext_resource type="Script" uid="uid://c3c8nkkqxb836" path="res://HUD.gd" id="1_hud"]
 
-[node name="HUD" type="CanvasLayer"]
+[node name="HUD" type="CanvasLayer" unique_id=991794040]
 script = ExtResource("1_hud")
 
-[node name="Control" type="Control" parent="."]
+[node name="Control" type="Control" parent="." unique_id=519663397]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -14,9 +14,9 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="BarraVida" type="ProgressBar" parent="Control"]
+[node name="BarraVida" type="ProgressBar" parent="Control" unique_id=223449880]
 layout_mode = 1
-anchors_preset = 1
+anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -110.0
@@ -24,13 +24,11 @@ offset_top = 16.0
 offset_right = 110.0
 offset_bottom = 40.0
 grow_horizontal = 2
-max_value = 100.0
 value = 100.0
-show_percentage = false
 
-[node name="BarraEscudo" type="ProgressBar" parent="Control"]
+[node name="BarraEscudo" type="ProgressBar" parent="Control" unique_id=521805088]
 layout_mode = 1
-anchors_preset = 1
+anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -110.0
@@ -38,24 +36,21 @@ offset_top = 44.0
 offset_right = 110.0
 offset_bottom = 64.0
 grow_horizontal = 2
-max_value = 100.0
-show_percentage = false
 
-[node name="PanelObjetivo" type="PanelContainer" parent="Control"]
+[node name="PanelObjetivo" type="PanelContainer" parent="Control" unique_id=1075094846]
 layout_mode = 1
-anchors_preset = 0
 offset_left = 16.0
 offset_top = 16.0
 offset_right = 206.0
 offset_bottom = 76.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Control/PanelObjetivo"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/PanelObjetivo" unique_id=1596091657]
 layout_mode = 2
 
-[node name="Objetivo" type="Label" parent="Control/PanelObjetivo/VBoxContainer"]
+[node name="Objetivo" type="Label" parent="Control/PanelObjetivo/VBoxContainer" unique_id=1550021249]
 layout_mode = 2
 text = "Cristales: 0 / 6"
 
-[node name="Tiempo" type="Label" parent="Control/PanelObjetivo/VBoxContainer"]
+[node name="Tiempo" type="Label" parent="Control/PanelObjetivo/VBoxContainer" unique_id=1222831660]
 layout_mode = 2
 text = "Tiempo: 02:00"

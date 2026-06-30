@@ -1,11 +1,11 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene format=3 uid="uid://b2m8ppt5cnbec"]
 
-[ext_resource type="Script" path="res://TutorialInicio.gd" id="1_tutorial"]
+[ext_resource type="Script" uid="uid://bllos8ab5f0sd" path="res://TutorialInicio.gd" id="1_tutorial"]
 
-[node name="TutorialInicio" type="CanvasLayer"]
+[node name="TutorialInicio" type="CanvasLayer" unique_id=1375977627]
 script = ExtResource("1_tutorial")
 
-[node name="Control" type="Control" parent="."]
+[node name="Control" type="Control" parent="." unique_id=133395558]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -14,8 +14,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Control"]
-modulate = Color(1, 1, 1, 1)
+[node name="VBoxContainer" type="VBoxContainer" parent="Control" unique_id=147252926]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -26,27 +25,27 @@ offset_right = 220.0
 offset_bottom = 154.0
 grow_horizontal = 2
 
-[node name="Movimiento" type="Label" parent="Control/VBoxContainer"]
+[node name="Movimiento" type="Label" parent="Control/VBoxContainer" unique_id=254428688]
 layout_mode = 2
 text = "WASD para moverte"
 horizontal_alignment = 1
 
-[node name="Seleccion" type="Label" parent="Control/VBoxContainer"]
+[node name="Seleccion" type="Label" parent="Control/VBoxContainer" unique_id=284146666]
 layout_mode = 2
 text = "Click en un enemigo para seleccionarlo"
 horizontal_alignment = 1
 
-[node name="Ataque" type="Label" parent="Control/VBoxContainer"]
+[node name="Ataque" type="Label" parent="Control/VBoxContainer" unique_id=607042127]
 layout_mode = 2
 text = "Espacio o Enter para atacar"
 horizontal_alignment = 1
 
-[node name="Objetivo" type="Label" parent="Control/VBoxContainer"]
+[node name="Objetivo" type="Label" parent="Control/VBoxContainer" unique_id=1750076097]
 layout_mode = 2
 text = "Recolecta los cristales antes de que termine el tiempo"
 horizontal_alignment = 1
 
-[node name="MensajeContextual" type="Label" parent="Control"]
+[node name="MensajeContextual" type="Label" parent="Control" unique_id=28363255]
 visible = false
 layout_mode = 1
 anchors_preset = 7
